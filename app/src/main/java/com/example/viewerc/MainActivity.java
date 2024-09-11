@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        webView = binding.webView;
-        setupWebViewWithUrl(pdfUrl + "Montag.pdf");
+        /*webView = binding.webView;
+        setupWebViewWithUrl(pdfUrl + "Montag.pdf");*/
 
 
         //pdfView = ;
@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, url);
 
 
-                webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + url);
-                webView.requestFocus();
+                /*webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + url);
+                webView.requestFocus();*/
             }
 
             @Override

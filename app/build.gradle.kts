@@ -47,7 +47,7 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     //implementation ("com.github.barteksc:pdfium-android:1.9.0")
-    //implementation ("com.github.mhiew:android-pdf-viewer:3.2.0-beta.1") // 2.8.2
+    implementation ("com.github.mhiew:android-pdf-viewer:3.2.0-beta.1") // 2.8.2
     //implementation("com.mindorks.android:prdownloader:0.6.0")
     implementation("com.github.amitshekhariitbhu:PRDownloader:1.0.1")
     //implementation ("com.github.barteksc:android-pdf-viewer:3.2.0-beta.1")
