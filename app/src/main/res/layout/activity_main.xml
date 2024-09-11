@@ -14,6 +14,7 @@
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:isScrollContainer="false"
+        android:textAlignment="center"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,32 +22,34 @@
         app:tabIndicatorGravity="top"
         app:tabInlineLabel="false"
         app:tabMode="fixed"
+        app:tabPaddingEnd="1dp"
+        app:tabPaddingStart="1dp"
         app:tabTextAppearance="@style/MineCustomTabText">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Montag" />
+            android:text="Mo" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dienstag" />
+            android:text="Di" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mittwoch" />
+            android:text="Mi" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Donnerstag" />
+            android:text="Do" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Freitag" />
+            android:text="Fr" />
     </com.google.android.material.tabs.TabLayout>
 
     <com.github.barteksc.pdfviewer.PDFView
