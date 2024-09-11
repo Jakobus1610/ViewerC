@@ -1,28 +1,39 @@
 package com.example.viewerc;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 //import com.github.*;
 //import com.github.barteksc.pdfviewer.
 // com.github.mhiew:android-pdf-viewer:3.2.0-beta.1
 
+
+import com.downloader.Error;
+import com.downloader.OnDownloadListener;
+import com.downloader.PRDownloader;
 import com.example.viewerc.databinding.ActivityMainBinding;
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnPageErrorListener;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
@@ -42,13 +53,33 @@ public class MainActivity extends AppCompatActivity {
     int duration = Toast.LENGTH_SHORT;
     final String pdfUrl = "https://www.osz1-technik-potsdam.de/wp-content/uploads/";
 
-    WebView pdfView;
+    //WebView pdfView;
+
+    PDFView pdfView;
+    ProgressBar progressBar;
+
+    Context appCon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        pdfView = binding.pdfView;
+        progressBar = binding.progressBar;
+
+        appCon = getApplicationContext();
+
+        PRDownloader.initialize(appCon);
+
+        /*progressBar.setVisibility(View.VISIBLE);
+        String fileName = "myFile.pdf";
+        downloadPdfFromInternet(
+                pdfUrl+"Montag.pdf",
+                getRootDirPath(this),
+                fileName);*/
+
         /*webView = binding.webView;
         setupWebViewWithUrl(pdfUrl + "Montag.pdf");*/
 
@@ -91,11 +122,18 @@ public class MainActivity extends AppCompatActivity {
                         //toast.show();
                 }
 
-                text = day;
-                Toast.makeText(binding.getRoot().getContext() /* MyActivity */, text, duration).show();
+                /*text = day;
+                Toast.makeText(binding.getRoot().getContext() *//* MyActivity *//*, text, duration).show();*/
 
                 String url = pdfUrl + day + ".pdf";
                 Log.v(TAG, url);
+
+                progressBar.setVisibility(View.VISIBLE);
+                String fileName = day + ".pdf";
+                downloadPdfFromInternet(
+                        url,
+                        getRootDirPath(appCon),
+                        fileName);
 
 
                 /*webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + url);
@@ -175,6 +213,50 @@ public class MainActivity extends AppCompatActivity {
 
         page.close();
         renderer.close();*/
+    }
+
+    private void downloadPdfFromInternet(String url, String dirPath, String fileName) {
+        PRDownloader.download(url, dirPath, fileName)
+                .build()
+                .start(new OnDownloadListener() {
+                    @Override
+                    public void onDownloadComplete() {
+//                        Toast.makeText(MainActivity.this, "downloadComplete", Toast.LENGTH_LONG).show();
+                        File downloadedFile = new File(dirPath, fileName);
+                        progressBar.setVisibility(View.GONE);
+                        showPdfFromFile(downloadedFile);
+                    }
+
+                    @Override
+                    public void onError(Error error) {
+                        Toast.makeText(MainActivity.this, "Error in downloading file : " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void showPdfFromFile(File file) {
+        pdfView.fromFile(file)
+                .password(null)
+                .defaultPage(0)
+                .enableSwipe(true)
+                .swipeHorizontal(false)
+                .enableDoubletap(true)
+                .onPageError(new OnPageErrorListener() {
+                    @Override
+                    public void onPageError(int page, Throwable t) {
+                        Toast.makeText(MainActivity.this, "Error at page: " + page, Toast.LENGTH_LONG).show();
+                    }
+                })
+                .load();
+    }
+
+    public String getRootDirPath(Context context) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            File file = ContextCompat.getExternalFilesDirs(context.getApplicationContext(), null)[0];
+            return file.getAbsolutePath();
+        } else {
+            return context.getApplicationContext().getFilesDir().getAbsolutePath();
+        }
     }
 
     // This function configures the WebView to display the PDF.
